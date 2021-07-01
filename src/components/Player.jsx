@@ -51,7 +51,7 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
       });
    };
    return (
-      <div className="player">
+      <section className="player">
          <div className="time-control">
             <p>{getTime(currentTime)}</p>
             <input
@@ -87,7 +87,7 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
             ref={audioRef}
             src={audio}
          />
-      </div>
+      </section>
    );
 };
 
