@@ -4,26 +4,28 @@ import {
    faPlay,
    faAngleRight,
    faAngleLeft,
+   faPause,
 } from "@fortawesome/free-solid-svg-icons";
 
 const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
    // States
    const [songTime, setSongTime] = useState({
-      currentTime: null,
-      duration: null,
+      currentTime: 0,
+      duration: 0,
    });
+   // Ref
+   const audioRef = useRef(0);
    // Destructuring
    const { audio } = currentSong;
    const { currentTime, duration } = songTime;
-   // Ref
-   const audioRef = useRef(null);
+   const { current } = audioRef;
    // Event Handlers
    const playSongHandler = () => {
       if (isPlaying) {
-         audioRef.current.pause();
+         current.pause();
          setIsPlaying(!isPlaying);
       } else {
-         audioRef.current.play();
+         current.play();
          setIsPlaying(!isPlaying);
       }
    };
@@ -41,11 +43,24 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
          Math.floor(time / 60) + ":" + ("0" + Math.floor(time % 60)).slice(-2)
       );
    };
+   const dragHandler = (e) => {
+      audioRef.current.currentTime = e.target.value;
+      setSongTime({
+         ...songTime,
+         currentTime: e.target.value,
+      });
+   };
    return (
       <div className="player">
          <div className="time-control">
             <p>{getTime(currentTime)}</p>
-            <input type="range" />
+            <input
+               onChange={dragHandler}
+               min={0}
+               max={duration}
+               value={currentTime}
+               type="range"
+            />
             <p>{getTime(duration)}</p>
          </div>
          <div className="player-control">
@@ -58,7 +73,7 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
                onClick={playSongHandler}
                className="play"
                size="2x"
-               icon={faPlay}
+               icon={isPlaying ? faPause : faPlay}
             />
             <FontAwesomeIcon
                className="skip-forwards"
