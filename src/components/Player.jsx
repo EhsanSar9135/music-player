@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,12 +9,38 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const Player = (props) => {
-   const { isPlaying, setIsPlaying, audioRef, songTime, setSongTime } = props;
-
+   const {
+      isPlaying,
+      setIsPlaying,
+      audioRef,
+      songTime,
+      setSongTime,
+      songs,
+      currentSong,
+      setCurrentSong,
+      setSongs,
+   } = props;
    // Destructuring
    const { currentTime, duration } = songTime;
    const { current } = audioRef;
    // Event Handlers
+   const activeLibraryHandler = (nextPrev) => {
+      // Add active state
+      const newSong = songs.map((song) => {
+         if (song.id === currentSong.id) {
+            return {
+               ...song,
+               active: true,
+            };
+         } else {
+            return {
+               ...song,
+               active: false,
+            };
+         }
+      });
+      setSongs(newSong);
+   };
    const playSongHandler = () => {
       if (isPlaying) {
          current.pause();
@@ -23,7 +50,6 @@ const Player = (props) => {
          setIsPlaying(!isPlaying);
       }
    };
-
    const getTime = (time) => {
       return (
          Math.floor(time / 60) + ":" + ("0" + Math.floor(time % 60)).slice(-2)
@@ -36,22 +62,53 @@ const Player = (props) => {
          currentTime: e.target.value,
       });
    };
+   const skipTrackHandler = async (direction) => {
+      let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
+      if (direction === "skip-forward") {
+         await setCurrentSong(songs[(currentIndex + 1) % songs.length]);
+         activeLibraryHandler(songs[(currentIndex + 1) % songs.length]);
+      }
+      if (direction === "skip-backward") {
+         if ((currentIndex - 1) % songs.length === -1) {
+            await setCurrentSong(songs[songs.length - 1]);
+            activeLibraryHandler(songs[songs.length - 1]);
+            isPlaying && audioRef.current.play();
+            return;
+         }
+         await setCurrentSong(songs[(currentIndex - 1) % songs.length]);
+         activeLibraryHandler(songs[(currentIndex - 1) % songs.length]);
+      }
+      isPlaying && audioRef.current.play();
+   };
+   // Add the Styles
+   const trackAnimation = {
+      transform: `translateX(${songTime.animationPercentage}%)`,
+   };
    return (
       <section className="player">
          <div className="time-control">
             <p>{getTime(currentTime)}</p>
-            <input
-               onChange={dragHandler}
-               min={0}
-               max={duration}
-               value={currentTime}
-               type="range"
-            />
-            <p>{getTime(duration)}</p>
+            <div
+               className="track"
+               style={{
+                  background: `linear-gradient(to right, ${currentSong.color[0]}, ${currentSong.color[1]})`,
+               }}
+            >
+               <input
+                  onChange={dragHandler}
+                  min={0}
+                  max={duration || 0}
+                  value={currentTime}
+                  type="range"
+               />
+               <div style={trackAnimation} className="animate-track"></div>
+            </div>
+            <p>{duration ? getTime(duration) : "0:00"}</p>
          </div>
          <div className="player-control">
             <FontAwesomeIcon
-               className="skip-backwards"
+               onClick={() => skipTrackHandler("skip-backward")}
+               className="skip-backward"
                size="2x"
                icon={faAngleLeft}
             />
@@ -62,7 +119,8 @@ const Player = (props) => {
                icon={isPlaying ? faPause : faPlay}
             />
             <FontAwesomeIcon
-               className="skip-forwards"
+               onClick={() => skipTrackHandler("skip-forward")}
+               className="skip-forward"
                size="2x"
                icon={faAngleRight}
             />

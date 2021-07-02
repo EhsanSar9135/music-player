@@ -5,8 +5,9 @@ import "./styles/app.scss";
 import Player from "./components/Player";
 import Song from "./components/Song";
 import Library from "./components/Library";
-// Import Util
-import data from "./util";
+import Nav from "./components/Nav";
+// Import Data
+import data from "./data";
 
 const App = () => {
    // States
@@ -16,31 +17,50 @@ const App = () => {
    const [songTime, setSongTime] = useState({
       currentTime: 0,
       duration: 0,
+      animationPercentage: 0,
    });
+   const [libraryStatus, setLibraryStatus] = useState(false);
    // Ref
    const audioRef = useRef(0);
-   // Destructing
-   const { audio } = currentSong;
    // Event Handlers
    const timeUpdateHandler = (e) => {
       const currentTime = e.target.currentTime;
       const duration = e.target.duration;
+      // Calculate Percentage
+      const roundedCurrent = Math.round(currentTime);
+      const roundedDuration = Math.round(duration);
+      const animationPercentage = Math.round(
+         (roundedCurrent / roundedDuration) * 100
+      );
       setSongTime({
          ...songTime,
          currentTime,
          duration,
+         animationPercentage,
       });
    };
+   const songEndHandler = async () => {
+      let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
+      await setCurrentSong(songs[(currentIndex + 1) % songs.length]);
+      isPlaying && audioRef.current.play();
+   };
    return (
-      <section className="App">
+      <section className={`App ${libraryStatus ? "library-active" : ""}`}>
+         <Nav
+            libraryStatus={libraryStatus}
+            setLibraryStatus={setLibraryStatus}
+         />
          <Song currentSong={currentSong} />
          <Player
             audioRef={audioRef}
             currentSong={currentSong}
+            setCurrentSong={setCurrentSong}
             isPlaying={isPlaying}
             setIsPlaying={setIsPlaying}
             songTime={songTime}
             setSongTime={setSongTime}
+            songs={songs}
+            setSongs={setSongs}
          />
          <Library
             songs={songs}
@@ -48,12 +68,14 @@ const App = () => {
             setCurrentSong={setCurrentSong}
             audioRef={audioRef}
             isPlaying={isPlaying}
+            libraryStatus={libraryStatus}
          />
          <audio
             onTimeUpdate={timeUpdateHandler}
             onLoadedMetadata={timeUpdateHandler}
             ref={audioRef}
-            src={audio}
+            src={currentSong.audio}
+            onEnded={songEndHandler}
          />
       </section>
    );

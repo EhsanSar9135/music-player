@@ -92,6 +92,15 @@ const chillHop = () => {
          color: ["#D583D5", "#759ED6"],
          audio: "https://mp3.chillhop.com/serve.php/?mp3=14998",
       },
+      {
+         name: "Legends Never Die",
+         artist: "Alan walker",
+         cover: "https://resamusic.ir/wp-content/uploads/2021/04/Alan-walker-_-Legends-Never-Die.jpg",
+         id: uuidv4(),
+         active: false,
+         color: ["#373737", "#050505"],
+         audio: "https://downloadmusic.gratomic.ir/music/dl/archive/2021/04/26/League_of_Legends_-Legends_Never_Die_feat_Against_The_Current_Gratomic.com_2.mp3",
+      },
    ];
 };
 
