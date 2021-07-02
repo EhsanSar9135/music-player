@@ -1,4 +1,5 @@
-import React from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
    faPlay,
@@ -6,6 +7,7 @@ import {
    faAngleLeft,
    faPause,
 } from "@fortawesome/free-solid-svg-icons";
+import { playAudio } from "../util";
 
 const Player = (props) => {
    const {
@@ -17,8 +19,26 @@ const Player = (props) => {
       songs,
       currentSong,
       setCurrentSong,
+      setSongs,
    } = props;
-
+   // UseEffect
+   useEffect(() => {
+      // Add active state
+      const newSong = songs.map((song) => {
+         if (song.id === currentSong.id) {
+            return {
+               ...song,
+               active: true,
+            };
+         } else {
+            return {
+               ...song,
+               active: false,
+            };
+         }
+      });
+      setSongs(newSong);
+   }, [currentSong]);
    // Destructuring
    const { currentTime, duration } = songTime;
    const { current } = audioRef;
@@ -52,10 +72,12 @@ const Player = (props) => {
       if (direction === "skip-backward") {
          if ((currentIndex - 1) % songs.length === -1) {
             setCurrentSong(songs[songs.length - 1]);
+            playAudio(isPlaying, audioRef);
             return;
          }
          setCurrentSong(songs[(currentIndex - 1) % songs.length]);
       }
+      playAudio(isPlaying, audioRef);
    };
    return (
       <section className="player">
@@ -68,7 +90,7 @@ const Player = (props) => {
                value={currentTime}
                type="range"
             />
-            <p>{getTime(duration)}</p>
+            <p>{duration ? getTime(duration) : "0:00"}</p>
          </div>
          <div className="player-control">
             <FontAwesomeIcon

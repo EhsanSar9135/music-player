@@ -7,7 +7,7 @@ import Song from "./components/Song";
 import Library from "./components/Library";
 import Nav from "./components/Nav";
 // Import Util
-import data from "./util";
+import data from "./data";
 
 const App = () => {
    // States
@@ -47,6 +47,7 @@ const App = () => {
             songTime={songTime}
             setSongTime={setSongTime}
             songs={songs}
+            setSongs={setSongs}
          />
          <Library
             songs={songs}
