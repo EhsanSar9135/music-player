@@ -1,9 +1,16 @@
 import React from "react";
 
-const LibrarySong = ({ song, setCurrentSong }) => {
+const LibrarySong = ({ song, setCurrentSong, audioRef, isPlaying }) => {
    const { cover, name, artist } = song;
    const songSelectHandler = () => {
       setCurrentSong(song);
+      if (isPlaying) {
+         const playPromise = audioRef.current.play();
+         playPromise &&
+            playPromise.then((audio) => {
+               audioRef.current.play();
+            });
+      }
    };
    return (
       <section onClick={songSelectHandler} className="library-song">
