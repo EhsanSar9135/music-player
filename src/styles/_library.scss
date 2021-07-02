@@ -2,9 +2,9 @@
    position: fixed;
    top: 0;
    left: 0;
-   width: 18rem;
+   width: 20rem;
    height: 100%;
-   box-shadow: 2px 2px 50px rgb(220, 220, 220);
+   box-shadow: 2px 2px 50px rgb(210, 210, 210);
    overflow: scroll;
    background: #fff;
    transform: translateX(-100%);
@@ -20,11 +20,12 @@
    align-items: center;
    padding: 1rem 2rem 1rem 2rem;
    cursor: pointer;
+   transition: background 0.5s ease;
    img {
       width: 30%;
    }
    &:hover {
-      background: rgb(235, 235, 235);
+      background: rgb(225, 225, 225);
    }
 }
 
@@ -58,10 +59,16 @@
 }
 
 .selected {
-   background: rgb(194, 208, 253);
+   background: rgb(180, 193, 238);
 }
 
 .active-library {
    transform: translateX(0%);
    opacity: 1;
+}
+
+@media (max-width: 768px) {
+   .library {
+      width: 100%;
+   }
 }

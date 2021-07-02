@@ -45,7 +45,7 @@ const App = () => {
       isPlaying && audioRef.current.play();
    };
    return (
-      <section className="App">
+      <section className={`App ${libraryStatus ? "library-active" : ""}`}>
          <Nav
             libraryStatus={libraryStatus}
             setLibraryStatus={setLibraryStatus}

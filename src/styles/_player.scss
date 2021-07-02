@@ -61,3 +61,12 @@ input[type="range"]::-webkit-slider-thumb {
    transform: translateX(0%);
    pointer-events: none;
 }
+
+@media (max-width: 768px) {
+   .time-control {
+      width: 90%;
+   }
+   .player-control {
+      width: 60%;
+   }
+}
