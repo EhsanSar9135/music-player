@@ -6,7 +6,7 @@ import Player from "./components/Player";
 import Song from "./components/Song";
 import Library from "./components/Library";
 import Nav from "./components/Nav";
-// Import Util
+// Import Data
 import data from "./data";
 
 const App = () => {
@@ -39,6 +39,11 @@ const App = () => {
          animationPercentage,
       });
    };
+   const songEndHandler = async () => {
+      let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
+      await setCurrentSong(songs[(currentIndex + 1) % songs.length]);
+      isPlaying && audioRef.current.play();
+   };
    return (
       <section className="App">
          <Nav
@@ -70,6 +75,7 @@ const App = () => {
             onLoadedMetadata={timeUpdateHandler}
             ref={audioRef}
             src={currentSong.audio}
+            onEnded={songEndHandler}
          />
       </section>
    );
