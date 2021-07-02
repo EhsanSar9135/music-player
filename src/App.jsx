@@ -21,8 +21,6 @@ const App = () => {
    const [libraryStatus, setLibraryStatus] = useState(false);
    // Ref
    const audioRef = useRef(0);
-   // Destructing
-   const { audio } = currentSong;
    // Event Handlers
    const timeUpdateHandler = (e) => {
       const currentTime = e.target.currentTime;
@@ -35,15 +33,20 @@ const App = () => {
    };
    return (
       <section className="App">
-         <Nav libraryStatus={libraryStatus} setLibraryStatus={setLibraryStatus} />
+         <Nav
+            libraryStatus={libraryStatus}
+            setLibraryStatus={setLibraryStatus}
+         />
          <Song currentSong={currentSong} />
          <Player
             audioRef={audioRef}
             currentSong={currentSong}
+            setCurrentSong={setCurrentSong}
             isPlaying={isPlaying}
             setIsPlaying={setIsPlaying}
             songTime={songTime}
             setSongTime={setSongTime}
+            songs={songs}
          />
          <Library
             songs={songs}
@@ -57,7 +60,7 @@ const App = () => {
             onTimeUpdate={timeUpdateHandler}
             onLoadedMetadata={timeUpdateHandler}
             ref={audioRef}
-            src={audio}
+            src={currentSong.audio}
          />
       </section>
    );

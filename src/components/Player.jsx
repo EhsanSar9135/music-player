@@ -8,7 +8,16 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const Player = (props) => {
-   const { isPlaying, setIsPlaying, audioRef, songTime, setSongTime } = props;
+   const {
+      isPlaying,
+      setIsPlaying,
+      audioRef,
+      songTime,
+      setSongTime,
+      songs,
+      currentSong,
+      setCurrentSong,
+   } = props;
 
    // Destructuring
    const { currentTime, duration } = songTime;
@@ -23,7 +32,6 @@ const Player = (props) => {
          setIsPlaying(!isPlaying);
       }
    };
-
    const getTime = (time) => {
       return (
          Math.floor(time / 60) + ":" + ("0" + Math.floor(time % 60)).slice(-2)
@@ -35,6 +43,19 @@ const Player = (props) => {
          ...songTime,
          currentTime: e.target.value,
       });
+   };
+   const skipTrackHandler = (direction) => {
+      let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
+      if (direction === "skip-forward") {
+         setCurrentSong(songs[(currentIndex + 1) % songs.length]);
+      }
+      if (direction === "skip-backward") {
+         if ((currentIndex - 1) % songs.length === -1) {
+            setCurrentSong(songs[songs.length - 1]);
+            return;
+         }
+         setCurrentSong(songs[(currentIndex - 1) % songs.length]);
+      }
    };
    return (
       <section className="player">
@@ -51,7 +72,8 @@ const Player = (props) => {
          </div>
          <div className="player-control">
             <FontAwesomeIcon
-               className="skip-backwards"
+               onClick={() => skipTrackHandler("skip-backward")}
+               className="skip-backward"
                size="2x"
                icon={faAngleLeft}
             />
@@ -62,7 +84,8 @@ const Player = (props) => {
                icon={isPlaying ? faPause : faPlay}
             />
             <FontAwesomeIcon
-               className="skip-forwards"
+               onClick={() => skipTrackHandler("skip-forward")}
+               className="skip-forward"
                size="2x"
                icon={faAngleRight}
             />
