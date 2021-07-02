@@ -43,7 +43,7 @@ const Player = (props) => {
             <input
                onChange={dragHandler}
                min={0}
-               max={duration}
+               max={duration || 0}
                value={currentTime}
                type="range"
             />

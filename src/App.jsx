@@ -5,6 +5,7 @@ import "./styles/app.scss";
 import Player from "./components/Player";
 import Song from "./components/Song";
 import Library from "./components/Library";
+import Nav from "./components/Nav";
 // Import Util
 import data from "./util";
 
@@ -17,6 +18,7 @@ const App = () => {
       currentTime: 0,
       duration: 0,
    });
+   const [libraryStatus, setLibraryStatus] = useState(false);
    // Ref
    const audioRef = useRef(0);
    // Destructing
@@ -33,6 +35,7 @@ const App = () => {
    };
    return (
       <section className="App">
+         <Nav libraryStatus={libraryStatus} setLibraryStatus={setLibraryStatus} />
          <Song currentSong={currentSong} />
          <Player
             audioRef={audioRef}
@@ -48,6 +51,7 @@ const App = () => {
             setCurrentSong={setCurrentSong}
             audioRef={audioRef}
             isPlaying={isPlaying}
+            libraryStatus={libraryStatus}
          />
          <audio
             onTimeUpdate={timeUpdateHandler}

@@ -2,11 +2,14 @@
    position: fixed;
    top: 0;
    left: 0;
-   width: 20rem;
+   width: 18rem;
    height: 100%;
-   box-shadow: 2px 2px 50px rgb(205, 205, 205);
+   box-shadow: 2px 2px 50px rgb(220, 220, 220);
    overflow: scroll;
    background: #fff;
+   transform: translateX(-100%);
+   transition: all 0.5s ease;
+   opacity: 0;
    h2 {
       padding: 2rem;
    }
@@ -21,7 +24,7 @@
       width: 30%;
    }
    &:hover {
-      background: rgb(220, 220, 255);
+      background: rgb(235, 235, 235);
    }
 }
 
@@ -55,5 +58,10 @@
 }
 
 .selected {
-   background: rgb(169, 169, 223);
+   background: rgb(194, 208, 253);
+}
+
+.active-library {
+   transform: translateX(0%);
+   opacity: 1;
 }
